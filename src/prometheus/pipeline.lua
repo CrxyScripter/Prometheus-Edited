@@ -1,10 +1,3 @@
--- This Script is Part of the Prometheus Obfuscator by Levno_710
---
--- pipeline.lua
---
--- This Script Provides a Configurable Obfuscation Pipeline that can obfuscate code using different Modules
--- These Modules can simply be added to the pipeline
-
 local config = require("config");
 local Ast    = require("prometheus.ast");
 local Enums  = require("prometheus.enums");
@@ -94,11 +87,11 @@ function Pipeline:fromConfig(config)
 	local steps = config.Steps or {};
 	for i, step in ipairs(steps) do
 		if type(step.Name) ~= "string" then
-			logger:error("Step.Name must be a String");
+			--logger:error("Step.Name must be a String");
 		end
 		local constructor = pipeline.Steps[step.Name];
 		if not constructor then
-			logger:error(string.format("The Step \"%s\" was not found!", step.Name));
+			--logger:error(string.format("The Step \"%s\" was not found!", step.Name));
 		end
 		pipeline:addStep(constructor:new(step.Settings or {}));
 	end
@@ -123,7 +116,7 @@ function Pipeline:setOption(name, value)
 	if(Pipeline.DefaultSettings[name] ~= nil) then
 		
 	else
-		logger:error(string.format("\"%s\" is not a valid setting"));
+		--logger:error(string.format("\"%s\" is not a valid setting"));
 	end
 end
 
@@ -163,7 +156,7 @@ end
 function Pipeline:apply(code, filename)
 	local startTime = gettime();
 	filename = filename or "Anonymus Script";
-	logger:info(string.format("Applying Obfuscation Pipeline to %s ...", filename));
+	--logger:info(string.format("Applying Obfuscation Pipeline to %s ...", filename));
 	-- Seed the Random Generator
 	if(self.Seed > 0) then
 		math.randomseed(self.Seed);
@@ -178,17 +171,17 @@ function Pipeline:apply(code, filename)
 	local ast = self.parser:parse(code);
 
 	local parserTimeDiff = gettime() - parserStartTime;
-	logger:info(string.format("Parsing Done in %.2f seconds", parserTimeDiff));
+	--logger:info(string.format("Parsing Done in %.2f seconds", parserTimeDiff));
 	
 	-- User Defined Steps
 	for i, step in ipairs(self.steps) do
 		local stepStartTime = gettime();
-		logger:info(string.format("Applying Step \"%s\" ...", step.Name or "Unnamed"));
+		--logger:info(string.format("Applying Step \"%s\" ...", step.Name or "Unnamed"));
 		local newAst = step:apply(ast, self);
 		if type(newAst) == "table" then
 			ast = newAst;
 		end
-		logger:info(string.format("Step \"%s\" Done in %.2f seconds", step.Name or "Unnamed", gettime() - stepStartTime));
+		--logger:info(string.format("Step \"%s\" Done in %.2f seconds", step.Name or "Unnamed", gettime() - stepStartTime));
 	end
 	
 	-- Rename Variables Step
@@ -197,9 +190,9 @@ function Pipeline:apply(code, filename)
 	code = self:unparse(ast);
 	
 	local timeDiff = gettime() - startTime;
-	logger:info(string.format("Obfuscation Done in %.2f seconds", timeDiff));
+	--logger:info(string.format("Obfuscation Done in %.2f seconds", timeDiff));
 	
-	logger:info(string.format("Generated Code size is %.2f%% of the Source Code size", (string.len(code) / sourceLen)*100))
+	--logger:info(string.format("Generated Code size is %.2f%% of the Source Code size", (string.len(code) / sourceLen)*100))
 	
 	return code;
 end
@@ -211,7 +204,7 @@ function Pipeline:unparse(ast)
 	local unparsed = self.unparser:unparse(ast);
 	
 	local timeDiff = gettime() - startTime;
-	logger:info(string.format("Code Generation Done in %.2f seconds", timeDiff));
+	--logger:info(string.format("Code Generation Done in %.2f seconds", timeDiff));
 	
 	return unparsed;
 end
@@ -230,7 +223,7 @@ function Pipeline:renameVariables(ast)
 	end
 	
 	if not self.unparser:isValidIdentifier(self.VarNamePrefix) and #self.VarNamePrefix ~= 0 then
-		logger:error(string.format("The Prefix \"%s\" is not a valid Identifier in %s", self.VarNamePrefix, self.LuaVersion));
+		--logger:error(string.format("The Prefix \"%s\" is not a valid Identifier in %s", self.VarNamePrefix, self.LuaVersion));
 	end
 
 	local globalScope = ast.globalScope;
@@ -241,7 +234,7 @@ function Pipeline:renameVariables(ast)
 	});
 	
 	local timeDiff = gettime() - startTime;
-	logger:info(string.format("Renaming Done in %.2f seconds", timeDiff));
+	--logger:info(string.format("Renaming Done in %.2f seconds", timeDiff));
 end
 
 
