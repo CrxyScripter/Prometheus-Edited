@@ -164,7 +164,7 @@ function Pipeline:apply(code, filename)
 		math.randomseed(os.time())
 	end
 	
-	logger:info("Parsing ...");
+	--logger:info("Parsing ...");
 	local parserStartTime = gettime();
 
 	local sourceLen = string.len(code);
@@ -199,7 +199,7 @@ end
 
 function Pipeline:unparse(ast)
 	local startTime = gettime();
-	logger:info("Generating Code ...");
+	--logger:info("Generating Code ...");
 	
 	local unparsed = self.unparser:unparse(ast);
 	
@@ -211,7 +211,7 @@ end
 
 function Pipeline:renameVariables(ast)
 	local startTime = gettime();
-	logger:info("Renaming Variables ...");
+	--logger:info("Renaming Variables ...");
 	
 	
 	local generatorFunction = self.namegenerator or Pipeline.NameGenerators.mangled;
