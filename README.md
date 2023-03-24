@@ -1,6 +1,11 @@
 # Prometheus-Edited
 This is a edited version of prometheus
 
+# Installation
+- Clone this repository with this command
+```
+git clone https://github.com/CrxyScripter/Prometheus-Edited
+```
 # Changes
 - Output method change to print
 - Remove commentary on obfuscating script
